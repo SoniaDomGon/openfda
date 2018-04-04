@@ -14,6 +14,6 @@ prods = json.loads(prods_raw)
 
 obj = 0
 while obj < 10:
-    drug = drugs['results'][obj]
+    prod = prods['results'][obj]
     print("id: ", drug['id'])
     obj +=1
