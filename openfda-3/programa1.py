@@ -33,7 +33,7 @@ def process_client(clientsocket):
     cont = """
       <!doctype html>
       <html>
-      <body style='background-color: light-green'>
+      <body style='background-color: lightgreen'>
         <h1>Medicamentos:</h1>
       </body>
       </html>
