@@ -4,7 +4,7 @@ import json
 
 # Configuracion del servidor:
 IP = "212.128.255.129"
-PORT = 2222
+PORT = 2221
 MAX_OPEN_REQUESTS = 3
 
 headers = {'User-Agent': 'http-client'}
