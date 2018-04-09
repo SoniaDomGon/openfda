@@ -3,7 +3,7 @@ import http.client
 import json
 
 # Configuracion del servidor:
-IP = "212.128.254.131"
+IP = "212.128.255.129"
 PORT = 2222
 MAX_OPEN_REQUESTS = 3
 
