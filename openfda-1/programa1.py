@@ -13,7 +13,7 @@ conn.close()
 prods = json.loads(prods_raw)
 
 prod = prods['results'][0]
-
+#jgvnoer
 print("id: ", prod['id'])
 print("Próposito del producto:", prod['purpose'])
 print("Fabricante del producto", prod['openfda']['manufacturer_name'])
