@@ -35,6 +35,9 @@ def process_client(clientsocket):
         <h2>Introduzca una de las siguientes opciones:</h2>
         <ul>
         <li>Consultar ingrediente activo</li>
+        <li>Consultar empresas</li>
+        <li>Lista de fármacos</li>
+        <li>Lista empresas</li>
         </ul>
       </body>
       </html>
