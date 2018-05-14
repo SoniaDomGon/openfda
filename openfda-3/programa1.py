@@ -4,7 +4,7 @@ import json
 
 # Configuracion del servidor:
 IP = "212.128.255.129"
-PORT = 2221
+PORT = 2220
 MAX_OPEN_REQUESTS = 3
 
 headers = {'User-Agent': 'http-client'}
@@ -17,7 +17,7 @@ prods_raw = inf.read().decode("utf-8")
 conn.close()
 
 prods = json.loads(prods_raw)
-def process_client(clientsocket):
+def process_client(client_socket):
     """Funcion para atender al cliente. Lee la peticion (pero la ignora)
        y le envia un mensaje de respuesta, con contenido HTML que se muestra en el navegador"""
 
