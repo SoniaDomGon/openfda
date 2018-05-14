@@ -35,13 +35,6 @@ def process_client(clientsocket):
       </body>
       </html>
     """
-    for prod in prods['results']:
-        if prod['openfda']:
-            print("El medicamento es:", prod['openfda']['generic_name'][0])
-            cont += (prod['openfda']['generic_name'][0])
-            cont +="</br></body></html>"
-        else:
-            continue
 
     l_inic = "HTTP/1.1 200 OK\n"
     cab = "Content-Type: text/html\n"
