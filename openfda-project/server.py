@@ -43,7 +43,7 @@ def process_client(clientsocket):
       </html>
     """
 
-    cont += str(input())
+    cont += str(input("Introduzca opcion:"))
 
     l_inic = "HTTP/1.1 200 OK\n"
     cab = "Content-Type: text/html\n"
