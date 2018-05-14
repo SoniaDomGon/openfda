@@ -32,7 +32,7 @@ def process_client(clientsocket):
       <html>
       <body style='background-color: lightgreen'>
         <h1>WELCOME!</h1>
-        <h2>Estas son las opciones:</h2>
+        <h2>Introduzca una de las siguientes opciones:</h2>
         <ul>
         <li>Consultar ingrediente activo</li>
         <li>Consultar empresas</li>
@@ -40,7 +40,7 @@ def process_client(clientsocket):
         <li>Lista de empresas</li>
         </ul>
         <br>
-        <input type="text" name="Introduzca aquí la opción">
+        <input type="text" name="">
       </body>
       </html>
     """
