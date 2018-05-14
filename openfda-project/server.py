@@ -31,7 +31,8 @@ def process_client(clientsocket):
       <!doctype html>
       <html>
       <body style='background-color: lightgreen'>
-        <h1>Medicamentos:</h1>
+        <h1>WELCOME!</h1>
+        <h2>Introduzca una de las siguientes opciones:</h2>
       </body>
       </html>
     """
