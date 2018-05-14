@@ -40,11 +40,13 @@ def process_client(clientsocket):
         <li>Lista de empresas</li>
         </ul>
         <br>
-        <input type="text" name="">
+        <input type="text" name="principal">
       </body>
       </html>
     """
 
+    if "principal" == "Consultar ingrediente activo":
+        print("OK")
 
     l_inic = "HTTP/1.1 200 OK\n"
     cab = "Content-Type: text/html\n"
