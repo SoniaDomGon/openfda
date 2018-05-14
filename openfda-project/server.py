@@ -40,7 +40,7 @@ def process_client(clientsocket):
         <li>Lista de empresas</li>
         </ul>
         <br>
-        <input type="text" name="principal">
+        <input type="radio" name="principal">
       </body>
       </html>
     """
