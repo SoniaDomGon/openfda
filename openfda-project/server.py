@@ -4,7 +4,7 @@ import json
 import socketserver
 
 
-IP = "212.128.255.129"
+IP = "212.128.254.149"
 PORT = 8000
 MAX_OPEN_REQUESTS = 5
 
@@ -12,7 +12,7 @@ headers = {'User-Agent': 'http-client'}
 
 conn = http.client.HTTPSConnection("api.fda.gov")
 
-conn.request("GET", "/drug/label.json?search=active_ingredient:", name, None, headers)
+conn.request("GET", "/drug/label.json", None, headers)
 
 inf = conn.getresponse()
 
