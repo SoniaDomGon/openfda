@@ -39,11 +39,12 @@ def process_client(clientsocket):
         <li>Lista de farmacos</li>
         <li>Lista de empresas</li>
         </ul>
+        <br>
+        <input type="text" name="Introduzca aquí la opción">
       </body>
       </html>
     """
 
-    cont += str(input("Introduzca aqui la opcion:"))
 
     l_inic = "HTTP/1.1 200 OK\n"
     cab = "Content-Type: text/html\n"
