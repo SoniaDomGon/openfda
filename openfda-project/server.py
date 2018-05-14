@@ -33,20 +33,14 @@ def process_client(clientsocket):
       <body style='background-color: lightgreen'>
         <h1>WELCOME!</h1>
         <h2>Introduzca una de las siguientes opciones:</h2>
-        <ul>
-        <li>Consultar ingrediente activo</li>
-        <li>Consultar empresas</li>
-        <li>Lista de farmacos</li>
-        <li>Lista de empresas</li>
-        </ul>
+        <input type="radio" name="Consultar ingrediente activo"><br>
+        <input type="radio" name="Consultar empresas"><br>
+        <input type="radio" name="Lista de farmacos"><br>
+        <input type="radio" name="Lista de empresas"><br>
         <br>
-        <input type="radio" name="principal">
       </body>
       </html>
     """
-
-    if "principal" == "Consultar ingrediente activo":
-        print("OK")
 
     l_inic = "HTTP/1.1 200 OK\n"
     cab = "Content-Type: text/html\n"
