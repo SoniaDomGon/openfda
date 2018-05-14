@@ -1,10 +1,12 @@
 import socket
 import http.client
 import json
-import flask
+import socketserver
+
 
 IP = "212.128.255.129"
 PORT = 8000
+MAX_OPEN_REQUESTS = 5
 
 headers = {'User-Agent': 'http-client'}
 
@@ -21,9 +23,9 @@ conn.close()
 
 
 
-def process_client(client_socket):
+def process_client(clientsocket):
 
-    mens_solic = client_socket.recv(1024)
+    mens_solic = clientsocket.recv(1024)
 
     cont = """
       <!doctype html>
@@ -47,25 +49,27 @@ def process_client(client_socket):
 
 
     mens_resp = str.encode(l_inic + cab + "\n" + cont)
-    client_socket.send(mens_resp)
-    client_socket.close()
+    clientsocket.send(mens_resp)
+    clientsocket.close()
 
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+socketserver.TCPServer.allow_reuse_address = True
 
 try:
 
-    server_socket.bind((IP, PORT))
+    serversocket.bind((IP, PORT))
 
-    server_socket.listen(MAX_OPEN_REQUESTS)
+    serversocket.listen(MAX_OPEN_REQUESTS)
 
     while True:
         print("Esperando clientes en IP: {}, Puerto: {}".format(IP, PORT))
-        (client_socket, address) = server_socket.accept()
+        (clientsocket, address) = serversocket.accept()
 
 
         print("  Peticion de cliente recibida. IP: {}".format(address))
-        process_client(client_socket)
+        process_client(clientsocket)
 
 except socket.error:
     print("Problemas usando el puerto {}".format(PORT))
