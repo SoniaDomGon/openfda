@@ -32,7 +32,7 @@ def process_client(clientsocket):
       <html>
       <body style='background-color: lightgreen'>
         <h1>WELCOME!</h1>
-        <h2>Introduzca una de las siguientes opciones:</h2>
+        <h2>Estas son las opciones las opciones:</h2>
         <ul>
         <li>Consultar ingrediente activo</li>
         <li>Consultar empresas</li>
@@ -42,6 +42,8 @@ def process_client(clientsocket):
       </body>
       </html>
     """
+
+    cont += str(input())
 
     l_inic = "HTTP/1.1 200 OK\n"
     cab = "Content-Type: text/html\n"
