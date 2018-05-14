@@ -37,7 +37,7 @@ def process_client(clientsocket):
         <li>Consultar ingrediente activo</li>
         <li>Consultar empresas</li>
         <li>Lista de farmacos</li>
-        <li>Lista empresas</li>
+        <li>Lista de empresas</li>
         </ul>
       </body>
       </html>
