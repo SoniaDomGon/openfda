@@ -33,10 +33,10 @@ def process_client(clientsocket):
       <body style='background-color: lightgreen'>
         <h1>WELCOME!</h1>
         <h2>Introduzca una de las siguientes opciones:</h2>
-        <input type="radio" name="Consultar ingrediente activo"><br>
-        <input type="radio" name="Consultar empresas"><br>
-        <input type="radio" name="Lista de farmacos"><br>
-        <input type="radio" name="Lista de empresas"><br>
+        <input type="radio" name="principal" value="Consultar ingrediente activo"><br>
+        <input type="radio" name="principal" value="Consultar empresas"><br>
+        <input type="radio" name="principal" value="Lista de farmacos"><br>
+        <input type="radio" name="principal" value="Lista de empresas"><br>
         <br>
       </body>
       </html>
