@@ -34,22 +34,22 @@ def process_client(clientsocket):
         <h1>WELCOME!</h1>
         <h2>Estas son las opciones que puede realizar:</h2>
         
-        <form action="/ingrediente.html">
+        <form action="/ingrediente.py">
         Consultar ingrediente activo <input type="text" name="ingrediente"><br>
         <br>
         </form>
         
-        <form action="/empresas.html">
+        <form action="/empresas.py">
         Consultar las empresas <input type="text" name="empresas"><br>
         <br>
         </form>
         
-        <form action="/listf.html">
+        <form action="/listf.py">
         <input type="submit" name="listf" value="Hacer una lista de farmacos"><br>
         <br>
         </form>
         
-        <form action="/liste.html">
+        <form action="/liste.py">
         <input type="submit" name="liste" value="Hacer una lista de empresas"><br>
         <br>
         </form>
