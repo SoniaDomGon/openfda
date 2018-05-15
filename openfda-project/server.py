@@ -38,9 +38,9 @@ def process_client(clientsocket):
         <br>    
         Consultar las empresas <input type="text" name="empresas"><br>
         <br>
-        Hacer una lista de farmacos <input type="text" name="listf"><br>
+        Hacer una lista de farmacos <input type="radio" name="listf"><br>
         <br>
-        Hacer una lista de empresas <input type="text" name="liste"><br>
+        Hacer una lista de empresas <input type="radio" name="liste"><br>
         <br>
         <input type="submit" value="Enviar">
       </body>
