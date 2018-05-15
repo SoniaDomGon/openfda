@@ -45,12 +45,12 @@ def process_client(clientsocket):
         </form>
         
         <form action="/listf.html">
-        Hacer una lista de farmacos <input type="radio" name="listf" value="lfarmacos"><br>
+        <input type="submit" name="listf" value="Hacer una lista de farmacos"><br>
         <br>
         </form>
         
         <form action="/liste.html">
-        Hacer una lista de empresas <input type="radio" name="liste" value="lempresas"><br>
+        <input type="submit" name="liste" value="Hacer una lista de empresas"><br>
         <br>
         </form>
       </body>
