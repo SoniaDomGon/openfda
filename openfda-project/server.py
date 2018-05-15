@@ -268,13 +268,11 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 Handler = TestHTTPRequestHandler
 
 httpd = socketserver.TCPServer((IP, PORT), Handler)
-print("serving at port", PORT)
+print("Serving at: port", PORT)
 
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:
-    print("")
     print("Interrumpido por el usuario")
 
-print("")
 print("Servidor parado")
