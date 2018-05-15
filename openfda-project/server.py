@@ -3,8 +3,8 @@ import http.client
 import json
 import socketserver
 
-
-IP = "212.128.254.149"
+IP = "192.168.1.8"
+##IP = "212.128.254.149"
 PORT = 8000
 MAX_OPEN_REQUESTS = 5
 
