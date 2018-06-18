@@ -6,6 +6,7 @@ import json
 #Puerto en el que lanzamos el servidor
 PORT = 8000
 
+#Clase que necesitamos para nuestro servidor
 class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
     URL = "api.fda.gov"
