@@ -244,5 +244,5 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 socketserver.TCPServer.allow_reuse_address = True
 Handler = testHTTPRequestHandler
 httpd = socketserver.TCPServer(("", PORT), Handler)
-print("Sirviendo en el puerto ", PORT)
+print("Sirviendo en el puerto", PORT)
 httpd.serve_forever()
