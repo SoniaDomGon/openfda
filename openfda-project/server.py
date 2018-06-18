@@ -3,276 +3,244 @@ import http.client
 import socketserver
 import json
 
-IP = "192.168.1.8"
 PORT = 8000
-socketserver.TCPServer.allow_reuse_address = True
 
-R_SERVER = "api.fda.gov"
-R_RESOURCE = "/drug/label.json"
-headers = {'User-Agent': 'http-client'}
+class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
-class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
+    URL = "api.fda.gov"
+    CLIENTE  = "/drug/label.json"
 
-    def solicitud_openfda(self, limit=1, str_search=""):
-
-        solicitud_str = "{}?limit={}".format(R_RESOURCE, limit)
-
-        if str_search != "":
-            solicitud_str += "&{}".format(str_search)
-
-        print("Recurso solicitado: {}".format(solicitud_str))
-
-        conn = http.client.HTTPSConnection(R_SERVER)
-
-        conn.request("GET", solicitud_str, None, headers)
-
+    def sol_openfda(self,limit=10):
+        conn = http.client.HTTPSConnection(self.URL)
+        conn.request("GET", self.CLIENTE + "?limit={}".format(limit))
         resp = conn.getresponse()
+        info_raw = resp.read().decode("utf-8")
+        info = json.loads(info_raw)
+        results = info['results']
+        return results
 
-        print(resp.status, resp.reason)
-
-        meds_json = resp.read().decode("utf-8")
-        conn.close()
-
-        return json.loads(meds_json)
+    def cabeceras(self):
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
 
     def primera_pagina(self):
         pagina = """
-        <!DOCTYPE html>
         <html>
-        <body style='background-color: #cc99ff'>
-        
-        <form action = "/SearchDrug" method="get">
-            <input type="submit" value="Buscar farmacos">
-            Nombre: <input type="text" name="ingrediente" value="">
-        </form>
-        <br>
-        
-        <form action = "/ListDrugs" method="get">
-            <input type="submit" value="Hacer lista de farmacos">
-            Limite: <input type="text" name="limit" value="1">
-        </form>
-        <br>
-        
-        <form action = "/SearchCompany" method="get">
-            <input type="submit" value="Buscar empresas">
-            Nombre: <input type="text" name="empresa" value="">
-        </form>
-        <br>
-        
-        <form action = "/ListCompanies" method="get">
-            <input type="submit" value="Hacer lista de empresas">
-            Limite: <input type="text" name="limit" value="1">
-        </form>
-        <br>
-
-        </body>
+            <body style="background-color:#cc99ff">
+                <h1>Drug product labelling</h1>
+                <br>
+                <h2>Buscar medicamentos:</h2>
+                <p>
+                    <form method="get" action="searchDrug">
+                        Nombre:<input type="text" name="drug"></input>
+                        <br>
+                        Limite:<input type="text" name="limit"></input>
+                        <br>
+                        <input type="submit" value="Buscar medicamentos"></input>
+                    </form>
+                    <br>
+                </p>
+                <h2>Buscar empresas:</h2>
+                <p>
+                    <form method="get" action="searchCompany">
+                        Nombre:<input type="text" name="company"></input>
+                        <br>
+                        Limite:<input type="text" name="limit"></input>
+                        <br>
+                        <input type="submit" value="Buscar empresas"></input>
+                    </form>
+                    <br>
+                </p>
+                <h2>Lista de medicamentos:</h2>
+                <p>
+                    <form method="get" action="listDrugs">
+                        Limite:<input type="text" name="limit"></input>
+                        <br>
+                        <input type="submit" value="Lista medicamentos"></input>
+                    </form>
+                    <br>
+                </p>
+                <h2>Lista de empresas:</h2>
+                <p>
+                    <form method="get" action="listCompanies">
+                        Limite:<input type="text" name="limit"></input>
+                        <br>
+                        <input type="submit" value="Lista empresas"></input>
+                    </form>
+                    <br>
+                </p>
+                <h2>Lista de advertencias:</h2>
+                <p>
+                    <form method="get" action="listWarnings">
+                        Limite:<input type="text" name="limit"></input>
+                        <br>
+                        <input type="submit" value="Lista advertencias"></input>
+                    </form>
+                </p>
+            </body>
         </html>
         """
-
         return pagina
 
-    def solicitud_listmeds(self, limit):
-
-        meds = self.solicitud_openfda(limit)
-
-        meta = meds['meta']
-        total = meta['results']['total']
-        limit = meta['results']['limit']
-        print("Medicamentos recibidos: {} / {}".format(limit, total))
-
-        mensaje = """
-        <!DOCTYPE html>
+    def contenido_inicial(self, lista):
+        contenido = ""
+        for i in lista:
+            contenido += "<li>{}</li>".format(i)
+        inicio = """
         <html>
-        <body style='background-color: #ccfff5'>
-        <p>Lista con nombre, marca, fabricante, ID y propositos de cada medicamento:</p>
-        <ul style='list-style-type:square'>
-        """
-
-        for med in meds['results']:
-            if med['openfda']:
-                nombre = med['openfda']['substance_name'][0]
-                marca = med['openfda']['brand_name'][0]
-                fabricante = med['openfda']['manufacturer_name'][0]
-            else:
-                nombre = "Nombre desconocido"
-                marca = "Marca desconocido"
-                fabricante = "Fabricante desconocido"
-
-            id = med['id']
-
-            try:
-                proposito = med['purpose'][0]
-            except KeyError:
-                proposito = "Proposito desconocido"
-
-            mensaje += "<li>{}. {}. {}. {}. {}</li>\n".format(nombre, marca, fabricante, id, proposito)
-
-        mensaje += """
-        </ul>
-        </body>
+            <body style="background-color:#99ffd6">
+                <ul style="list-style-type:square">{}</ul>
+            </body>
         </html>
-        """
-
-        return mensaje
-
-    def solicitud_listempresas(self, limit):
-
-        meds = self.solicitud_openfda(limit)
-
-        meta = meds['meta']
-        total = meta['results']['total']
-        limit = meta['results']['limit']
-        print("Empresas recibidas: {} / {}".format(limit, total))
-
-        mensaje = """
-        <!DOCTYPE html>
-        <html>
-        <body style='background-color: #ffb3d1'>
-        <p>Los fabricantes de los medicamentos son:</p>
-        <ul style='list-style-type:square'>
-        """
-
-        for med in meds['results']:
-            if med['openfda']:
-                fabricante = med['openfda']['manufacturer_name'][0]
-            else:
-                continue
-            mensaje += "<li>{}</li>".format(fabricante)
-        mensaje += """
-        </ul>
-        </body>
-        </html>
-        """
-
-        return mensaje
-
-    def buscar_medicamento(self):
-
-        ingrediente = self.path.split("=")[1]
-
-        solicitud = "{}?search=active_ingredient:{}".format(R_RESOURCE, ingrediente)
-
-        conn = http.client.HTTPSConnection(R_SERVER)
-        conn.request("GET", solicitud, None, headers)
-        resp = conn.getresponse()
-        print(resp.status, resp.reason)
-        meds_raw = resp.read().decode("utf-8")
-        conn.close()
-        meds = json.loads(meds_raw)
-
-        mensaje = """
-        <!DOCTYPE html>
-        <html>
-        <body style='background-color: #b3ffb3'>
-        <p>Los medicamentos con el nombre buscado son:</p>
-        <ul style='list-style-type:square'>
-        """
-
-        for med in meds['results']:
-            if med['openfda']:
-                nombre = med['openfda']['substance_name'][0]
-            else:
-                nombre = "Nombre desconocido"
-            mensaje += "<li>{}</li>".format(nombre)
-        mensaje += """
-        </ul>
-        </body>
-        </html>
-        """
-
-        return mensaje
-
-    def buscar_empresa(self):
-
-        empresa = self.path.split("=")[1]
-
-        solicitud = "{}?search=openfda.manufacturer_name:{}".format(R_RESOURCE, empresa)
-
-        conn = http.client.HTTPSConnection(R_SERVER)
-        conn.request("GET", solicitud, None, headers)
-        resp = conn.getresponse()
-        print(resp.status, resp.reason)
-        meds_raw = resp.read().decode("utf-8")
-        conn.close()
-        meds = json.loads(meds_raw)
-
-        mensaje = """
-        <!DOCTYPE html>
-        <html>
-        <body style='background-color: #ffeb99'>
-        <p>Las empresas con el nombre buscado son:</p>
-        <ul style='list-style-type:square'>
-        """
-
-        for med in meds['results']:
-            if med['openfda']:
-                empresa = med['openfda']['manufacturer_name'][0]
-            else:
-                empresa = "Empresa desconocida"
-            mensaje += "<li>{}</li>".format(empresa)
-        mensaje += """
-        </ul>
-        </body>
-        </html>
-        """
-        return mensaje
+        """.format(contenido)
+        return inicio
 
     def do_GET(self):
-
-        print("Recurso: {}".format(self.path))
-
-        mensaje = ""
-        recurso = self.path.split("?")
-        fin = recurso[0]
-        if len(recurso) > 1:
-            parametro = recurso[1]
+        lista_path = self.path.split("?")
+        if len(lista_path)>1:
+            params = lista_path[1]
         else:
-            parametro = ""
+            params = ""
 
-        print("Endpoint: {}, params: {}".format(fin, parametro))
+        if self.path == "/":
+            self.send_response(200)
+            self.cabeceras()
+            todo = self.primera_pagina()
+            self.wfile.write(bytes(todo,"utf-8"))
 
-        limit = 1
+        elif "searchDrug" in self.path:
+            self.send_response(200)
+            self.cabeceras()
+            params = self.path.split("&")
+            url_limit = params[1]
+            if url_limit == "limit=":
+                limit = 10
+            else:
+                limit = int(url_limit.split("=")[1])
 
-        if parametro:
-            print("Hay parametros")
-            parse_limit = parametro.split("=")
-            if parse_limit[0] == "limit":
-                limit = int(parse_limit[1])
-                print("Limit: {}".format(limit))
+            ingrediente = params[0].split("=")[1]
+            lista_drugs = []
+            conn = http.client.HTTPSConnection(self.URL)
+            conn.request("GET", self.CLIENTE + "?limit={}".format(limit) + "&search=active_ingredient=" + ingrediente)
+            resp = conn.getresponse()
+            info_raw = resp.read().decode("utf-8")
+            info = json.loads(info_raw)
+            try:
+                results = info['results']
+                for i in results:
+                    if 'generic_name' in i['openfda']:
+                        lista_drugs.append(i['openfda']['generic_name'][0])
+                    else:
+                        lista_drugs.append("Medicamento desconocido")
+            except KeyError:
+                lista_drugs.append("Sin resultados")
+
+            todo = self.contenido_inicial(lista_drugs)
+            self.wfile.write(bytes(todo, "utf-8"))
+
+        elif "searchCompany" in self.path:
+            self.send_response(200)
+            self.cabeceras()
+            params = self.path.split("&")
+            url_limit = params[1]
+            if url_limit == "limit=":
+                limit = 10
+            else:
+                limit = int(url_limit.split("=")[1])
+
+            company = params[0].split("=")[1]
+            lista_companies = []
+            conn = http.client.HTTPSConnection(self.URL)
+            conn.request("GET", self.CLIENTE + "?limit={}".format(limit) + "&search=openfda.manufacturer_name=" + company)
+            resp = conn.getresponse()
+            info_raw = resp.read().decode("utf-8")
+            info = json.loads(info_raw)
+            try:
+                results = info['results']
+                for i in results:
+                    if 'manufacturer_name' in i['openfda']:
+                        lista_companies.append(i['openfda']['manufacturer_name'][0])
+                    else:
+                        lista_companies.append("Empresa desconocida")
+            except KeyError:
+                lista_companies.append("Sin resultados")
+
+            todo = self.contenido_inicial(lista_companies)
+            self.wfile.write(bytes(todo, "utf-8"))
+
+        elif "listDrugs" in self.path:
+            self.send_response(200)
+            self.cabeceras()
+            params = self.path.split("?")
+            url_limit = params[1]
+            if url_limit == "limit=":
+                limit = 10
+            else:
+                limit = int(url_limit.split("=")[1])
+
+            lista_drugs = []
+            given = self.sol_openfda(limit)
+            for i in given:
+                if 'generic_name' in i['openfda']:
+                    lista_drugs.append(i['openfda']['generic_name'][0])
+                else:
+                    lista_drugs.append("Medicamento desconocido")
+
+            todo = self.contenido_inicial(lista_drugs)
+            self.wfile.write(bytes(todo, "utf-8"))
+
+        elif "listCompanies" in self.path:
+            self.send_response(200)
+            self.cabeceras()
+            params = self.path.split("?")
+            url_limit = params[1]
+            if url_limit == "limit=":
+                limit = 10
+            else:
+                limit = int(url_limit.split("=")[1])
+
+            lista_companies = []
+            given = self.sol_openfda(limit)
+            for i in given:
+                if 'manufacturer_name' in i['openfda']:
+                    lista_companies.append(i['openfda']['manufacturer_name'][0])
+                else:
+                    lista_companies.append("Empresa desconocida")
+
+            todo = self.contenido_inicial(lista_companies)
+            self.wfile.write(bytes(todo, "utf-8"))
+
+        elif "listWarnings" in self.path:
+            self.send_response(200)
+            self.cabeceras()
+            params = self.path.split("?")
+            url_limit = params[1]
+            if url_limit == "limit=":
+                limit = 10
+            else:
+                limit = int(url_limit.split("=")[1])
+
+            lista_warnings = []
+            given = self.sol_openfda(limit)
+            for i in given:
+                if 'warnings' in i:
+                    lista_warnings.append(i['warnings'])
+                else:
+                    lista_warnings.append("Adevertencias desconocidas")
+
+            todo = self.contenido_inicial(lista_warnings)
+            self.wfile.write(bytes(todo, "utf-8"))
+
         else:
-            print("SIN PARAMETROS")
+            self.send_error(404)
+            self.send_header("Content-type", "text/plain; charset=utf-8")
+            self.end_headers()
+            self.wfile.write("No encontrado ({})".format(self.path).encode("utf-8"))
 
-        if fin == "/":
-            mensaje = self.primera_pagina()
-
-        elif fin == "/ListDrugs":
-            mensaje = self.solicitud_listmeds(limit)
-
-        elif fin == "/ListCompanies":
-            mensaje = self.solicitud_listempresas(limit)
-
-        elif fin == "/SearchDrug":
-            mensaje = self.buscar_medicamento()
-
-        elif fin == "/SearchCompany":
-            mensaje = self.buscar_empresa()
-
-        self.send_response(200)
-
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-
-        self.wfile.write(bytes(mensaje, "utf8"))
         return
 
-Handler = TestHTTPRequestHandler
-
-httpd = socketserver.TCPServer((IP, PORT), Handler)
-print("Serving at: port", PORT)
-
-try:
-    httpd.serve_forever()
-except KeyboardInterrupt:
-    print("Interrumpido por el usuario")
-
-print("Servidor parado")
+socketserver.TCPServer.allow_reuse_address = True
+Handler = testHTTPRequestHandler
+httpd = socketserver.TCPServer(("", PORT), Handler)
+print("Sirviendo en el puerto  ", PORT)
+httpd.serve_forever()
