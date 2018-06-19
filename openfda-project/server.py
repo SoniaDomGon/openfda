@@ -148,10 +148,10 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 limit = int(url_limit.split("=")[1])
 
-            company = params[0].split("=")[1]
-            lista_companies = []
+            comp = params[0].split("=")[1]
+            lista_comps = []
             conn = http.client.HTTPSConnection(self.URL)
-            conn.request("GET", self.CLIENTE + "?limit={}".format(limit) + "&search=openfda.manufacturer_name=" + company)
+            conn.request("GET", self.CLIENTE + "?limit={}".format(limit) + "&search=openfda.manufacturer_name=" + comp)
             resp = conn.getresponse()
             info_raw = resp.read().decode("utf-8")
             info = json.loads(info_raw)
@@ -159,13 +159,13 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 results = info['results']
                 for i in results:
                     if 'manufacturer_name' in i['openfda']:
-                        lista_companies.append(i['openfda']['manufacturer_name'][0])
+                        lista_comps.append(i['openfda']['manufacturer_name'][0])
                     else:
-                        lista_companies.append("Empresa desconocida")
+                        lista_comps.append("Empresa desconocida")
             except KeyError:
-                lista_companies.append("Sin resultados")
+                lista_comps.append("Sin resultados")
 
-            todo = self.contenido_inicial(lista_companies)
+            todo = self.contenido_inicial(lista_comps)
             self.wfile.write(bytes(todo, "utf-8"))
 
         elif "listDrugs" in self.path:
