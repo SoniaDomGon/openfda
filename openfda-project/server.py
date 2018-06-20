@@ -199,15 +199,15 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 limit = int(url_limit.split("=")[1])
 
-            lista_companies = []
+            lista_comps = []
             given = self.sol_openfda(limit)
             for i in given:
                 if 'manufacturer_name' in i['openfda']:
-                    lista_companies.append(i['openfda']['manufacturer_name'][0])
+                    lista_comps.append(i['openfda']['manufacturer_name'][0])
                 else:
-                    lista_companies.append("Empresa desconocida")
+                    lista_comps.append("Empresa desconocida")
 
-            todo = self.contenido_inicial(lista_companies)
+            todo = self.contenido_inicial(lista_comps)
             self.wfile.write(bytes(todo, "utf-8"))
 
         elif "listWarnings" in self.path:
